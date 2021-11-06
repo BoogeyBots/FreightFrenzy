@@ -53,10 +53,9 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
  */
 @TeleOp(name = "Sensor: MR Color", group = "Sensor")
 @Disabled
-public class SensorMRColor extends LinearOpMode {
+public class  SensorMRColor extends LinearOpMode {
 
   ColorSensor colorSensor;    // Hardware Device Object
-
 
   @Override
   public void runOpMode() {
