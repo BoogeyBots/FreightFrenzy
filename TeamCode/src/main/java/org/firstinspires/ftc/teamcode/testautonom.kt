@@ -29,7 +29,7 @@ class testautonom : LinearOpMode() {
                 .splineTo(Vector2d(26.0, 5.0), 0.0)
                 .build()
         drive.followTrajectory(traj3)
-        val traj4 = drive.trajectoryBuilder(Pose2d(48.0 ,16.0))
+        val traj4 = drive.trajectoryBuilder(Pose2d(26.0 ,5.0))
                 .splineTo(Vector2d(0.0, 0.0), 0.0)
                 .build()
         drive.followTrajectory(traj4)
