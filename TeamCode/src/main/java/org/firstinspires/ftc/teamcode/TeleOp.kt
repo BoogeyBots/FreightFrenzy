@@ -28,12 +28,19 @@
  */
 package org.firstinspires.ftc.robotcontroller.external.samples
 
+import android.R
 import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.util.ElapsedTime
 import com.qualcomm.robotcore.util.Range
+import android.R.attr.x
+
+import android.R.attr.y
+import kotlin.math.abs
+import kotlin.math.max
+
 
 /**
  * This file contains an minimal example of a Linear "OpMode". An OpMode is a 'program' that runs in either
@@ -47,7 +54,7 @@ import com.qualcomm.robotcore.util.Range
  * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
-@TeleOp(name = "Basic TeleOp", group = "Linear Opmode")
+@TeleOp(name = "Ionut TeleOp", group = "Linear Opmode")
 class BasicTeleOp : LinearOpMode() {
     // Declare OpMode members.
     private val runtime = ElapsedTime()
@@ -70,8 +77,8 @@ class BasicTeleOp : LinearOpMode() {
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
-        //  leftDrive?.setDirection(DcMotor.Direction.FORWARD)
-        //  rightDrive?.setDirection(DcMotor.Direction.REVERSE)
+         // leftDrive?.setDirection(DcMotor.Direction.FORWARD)
+         // rightDrive?.setDirection(DcMotor.Direction.REVERSE)
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart()
@@ -94,10 +101,13 @@ class BasicTeleOp : LinearOpMode() {
             val y = -gamepad1.left_stick_y.toDouble()
             val x = gamepad1.left_stick_x.toDouble()
             val rx = gamepad1.right_stick_x.toDouble()
-            leftPowerBack = Range.clip(y - x + rx, -1.0, 1.0)
-            rightPowerBack = Range.clip(y + x - rx, -1.0, 1.0)
-            leftPowerFront = Range.clip(x + y + rx, -1.0, 1.0)
-            rightPowerFront = Range.clip(y - x - rx, -1.0, 1.0)
+            val denominator: Double =
+                max(abs(y) + abs(x) + abs(rx), 1.0)
+
+            leftPowerBack = (y - x + rx) /denominator
+            rightPowerBack = (y + x - rx) / denominator
+            leftPowerFront = (y + x + rx) / denominator
+            rightPowerFront = (y - x - rx) / denominator
 
             // Tank Mode uses one stick to control each wheel.
             // - This requires no math, but it is hard to drive forward slowly and keep straight.
@@ -105,10 +115,10 @@ class BasicTeleOp : LinearOpMode() {
             // rightPower = -gamepad1.right_stick_y ;
 
             // Send calculated power to wheels
-            leftDriveBack?.setPower(leftPowerBack)
-            rightDriveBack?.setPower(rightPowerBack)
-            leftDriveFront?.setPower(leftPowerFront)
-            rightDriveFront?.setPower(rightPowerFront)
+            leftDriveBack?.power = -leftPowerBack
+            rightDriveBack?.power = rightPowerBack
+            leftDriveFront?.power = -leftPowerFront
+            rightDriveFront?.power = rightPowerFront
 
 
             // Show the elapsed game time and wheel power.
