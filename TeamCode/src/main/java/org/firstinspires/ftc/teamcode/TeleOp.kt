@@ -26,18 +26,14 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.firstinspires.ftc.robotcontroller.external.samples
+package org.firstinspires.ftc.teamcode
 
-import android.R
-import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.util.ElapsedTime
-import com.qualcomm.robotcore.util.Range
-import android.R.attr.x
 
-import android.R.attr.y
+import com.qualcomm.robotcore.hardware.Servo
 import kotlin.math.abs
 import kotlin.math.max
 
@@ -62,6 +58,9 @@ class BasicTeleOp : LinearOpMode() {
     private var rightDriveBack: DcMotor? = null
     private var leftDriveFront: DcMotor? = null
     private var rightDriveFront: DcMotor? = null
+    private var topArm: Servo? = null
+
+
     override fun runOpMode() {
         telemetry.addData("Status", "Initialized")
         telemetry.update()
@@ -73,6 +72,8 @@ class BasicTeleOp : LinearOpMode() {
         rightDriveBack = hardwareMap.get(DcMotor::class.java, "right_drive_back")
         leftDriveFront = hardwareMap.get(DcMotor::class.java, "left_drive_front")
         rightDriveFront = hardwareMap.get(DcMotor::class.java, "right_drive_front")
+        topArm = hardwareMap.get(Servo::class.java, "top_arm")
+
 
 
         // Most robots need the motor on one side to be reversed to drive forward
@@ -92,6 +93,8 @@ class BasicTeleOp : LinearOpMode() {
             var rightPowerBack: Double
             var leftPowerFront: Double
             var rightPowerFront: Double
+            var basePowerArm: Double
+            var topPowerArm: Double
 
             // Choose to drive using either Tank Mode, or POV Mode
             // Comment out the method that's not used.  The default below is POV.
@@ -103,6 +106,13 @@ class BasicTeleOp : LinearOpMode() {
             val rx = gamepad1.right_stick_x.toDouble()
             val denominator: Double =
                 max(abs(y) + abs(x) + abs(rx), 1.0)
+            val servoL = gamepad1.dpad_left
+            val servoR = gamepad1.dpad_right
+            if(gamepad1.dpad_left)
+                topArm?.position = 0.0;
+            if(gamepad1.dpad_right)
+                topArm?.position = 1.0;
+
 
             leftPowerBack = (y - x + rx) /denominator
             rightPowerBack = (y + x - rx) / denominator
