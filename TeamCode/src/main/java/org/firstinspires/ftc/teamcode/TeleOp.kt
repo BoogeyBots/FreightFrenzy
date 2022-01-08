@@ -59,6 +59,11 @@ class BasicTeleOp : LinearOpMode() {
     private var leftDriveFront: DcMotor? = null
     private var rightDriveFront: DcMotor? = null
     private var topArm: Servo? = null
+    private var dcAruncat: DcMotor? = null
+    private  var servoImpins: Servo? = null
+    private var supt: DcMotor? = null
+    private var motorPower = 0.0
+
 
 
     override fun runOpMode() {
@@ -72,8 +77,12 @@ class BasicTeleOp : LinearOpMode() {
         rightDriveBack = hardwareMap.get(DcMotor::class.java, "right_drive_back")
         leftDriveFront = hardwareMap.get(DcMotor::class.java, "left_drive_front")
         rightDriveFront = hardwareMap.get(DcMotor::class.java, "right_drive_front")
+        supt = hardwareMap.get(DcMotor::class.java, "supt")
+        dcAruncat = hardwareMap.get(DcMotor::class.java, "dc_aruncat")
+        servoImpins = hardwareMap.get(Servo::class.java, "servo_impins")
         topArm = hardwareMap.get(Servo::class.java, "top_arm")
-
+        servoImpins?.position = 0.5
+        supt?.power= 0.0
 
 
         // Most robots need the motor on one side to be reversed to drive forward
@@ -100,7 +109,7 @@ class BasicTeleOp : LinearOpMode() {
             // Comment out the method that's not used.  The default below is POV.
 
             // POV Mode uses left stick to go forward, and right stick to turn.
-            // - This uses basic math to combine motions and is easier to drive straight.
+            // -
             val y = -gamepad1.left_stick_y.toDouble()
             val x = gamepad1.left_stick_x.toDouble()
             val rx = gamepad1.right_stick_x.toDouble()
@@ -112,6 +121,23 @@ class BasicTeleOp : LinearOpMode() {
                 topArm?.position = 0.0;
             if(gamepad1.dpad_right)
                 topArm?.position = 1.0;
+
+            if(gamepad1.a)
+                dcAruncat?.power = 0.7
+            if(gamepad1.b) {
+                dcAruncat?.power = 0.0
+                supt?.power = 0.0
+            }
+            if(gamepad1.right_bumper)
+                servoImpins?.position = 0.0
+            if(gamepad1.left_bumper)
+                servoImpins?.position=0.5
+            if(gamepad1.dpad_up)
+                supt?.power = 1.0
+            if(gamepad1.dpad_down)
+                supt?.power = -1.0
+
+
 
 
             leftPowerBack = (y - x + rx) /denominator
